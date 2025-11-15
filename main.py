@@ -8,7 +8,10 @@ from huggingface_hub import InferenceClient
 # Initialize HuggingFace client
 @st.cache_resource
 def get_hf_client():
-    return InferenceClient(api_key=st.secrets["HF_TOKEN"])
+    return InferenceClient(
+        api_key=st.secrets["HF_TOKEN"],
+        base_url="https://api-inference.huggingface.co/models"
+    )
 
 # Load and preprocess prompts data
 @st.cache_data
@@ -34,7 +37,7 @@ def find_best_match(user_query, vectorizer, tfidf_matrix, df):
 def generate_prompt(client, messages):
     try:
         completion = client.chat.completions.create(
-            model="Qwen/Qwen2.5-72B-Instruct",
+            model="Qwen/Qwen3-Coder-30B-A3B-Instruct",
             messages=messages,
             max_tokens=1500,
             temperature=0.7
@@ -165,4 +168,4 @@ with st.sidebar:
         st.rerun()
     
     st.divider()
-    st.caption("Powered by Qwen 2.5-72B-Instruct")
+    st.caption("Powered by Qwen3-Coder-30B-A3B-Instruct")
